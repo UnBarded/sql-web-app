@@ -1,0 +1,400 @@
+<mat-grid-list cols="8" rowHeight="1:1">
+    <mat-grid-tile><button matButton (click)="run('select * from tblCustomer', 0)">View All
+            Customers</button></mat-grid-tile>
+    <mat-grid-tile>
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+                <mat-label>Search Customer</mat-label>
+                <input matInput name="input" [(ngModel)]="customerId">
+            </mat-form-field>
+            <button matButton (click)="run_query_4()">search</button>
+        </form>
+    </mat-grid-tile>
+    <mat-grid-tile><button matButton (click)="run_query_3()">View Items Consumed</button></mat-grid-tile>
+    <mat-grid-tile><button matButton (click)="run_query_2()">View Customer Costs</button></mat-grid-tile>
+    <mat-grid-tile><button matButton (click)="run_query_1()">View Worker Types</button></mat-grid-tile>
+    <mat-grid-tile>
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+                <mat-label>Search Requests For Tommorow</mat-label>
+                <input matInput name="input" [(ngModel)]="request">
+            </mat-form-field>
+            <button matButton (click)="run_query_5()">search</button>
+        </form>
+    </mat-grid-tile>
+    <mat-grid-tile><button matButton (click)="run_query_6()">View Number Of Devices Fixed Since Getting Expertise In The
+            Last Year</button></mat-grid-tile>
+    <mat-grid-tile>
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+                <mat-label>search</mat-label>
+                <input matInput name="input" [(ngModel)]="amount">
+            </mat-form-field>
+            <button matButton (click)="run_query_7()">View Technicians that fixed at least the amount in their expertise</button>
+        </form>
+    </mat-grid-tile>
+</mat-grid-list>
+
+
+<div *ngIf="error" style="color: red;">Error: {{ error }}</div>
+
+<table mat-table [dataSource]="results" *ngIf="type == 0" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="CustomerID">
+        <th mat-header-cell *matHeaderCellDef> CustomerID </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.CustomerID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="firstname">
+        <th mat-header-cell *matHeaderCellDef> firstname </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.FirstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastname">
+        <th mat-header-cell *matHeaderCellDef> lastname </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.LastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> email </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.Email}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef> address </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.Address}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="credit_type">
+        <th mat-header-cell *matHeaderCellDef> credit_card </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.CreditCard}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="credit_card">
+        <th mat-header-cell *matHeaderCellDef> credit_type </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.CreditType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="validity_card">
+        <th mat-header-cell *matHeaderCellDef> validity_card </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.ValidityCard}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef> select </th>
+        <td mat-cell *matCellDef="let customer">
+            <button (click)="run('select * from tblDevices a where a.CustomerID = ' + customer.CustomerID, 1)" matFab
+                aria-label="Example icon button with a delete icon">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 1" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="CustomerID">
+        <th mat-header-cell *matHeaderCellDef> CustomerID </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.CustomerID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="DeviceID">
+        <th mat-header-cell *matHeaderCellDef> firstname </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.DeviceID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="DeviceType">
+        <th mat-header-cell *matHeaderCellDef> lastname </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.DeviceType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Model">
+        <th mat-header-cell *matHeaderCellDef> email </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.Model}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Producer">
+        <th mat-header-cell *matHeaderCellDef> address </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.Producer}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="PurchaseDate">
+        <th mat-header-cell *matHeaderCellDef> credit_card </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.PurchaseDate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef> select </th>
+        <td mat-cell *matCellDef="let customer">
+            <button (click)="run('select * from tblDevices a where a.CustomerID = ' + customer.CustomerID, 1)" matFab
+                aria-label="Example icon button with a delete icon">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 2" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="CustomerID">
+        <th mat-header-cell *matHeaderCellDef> CustomerID </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.CustomerID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="firstname">
+        <th mat-header-cell *matHeaderCellDef> firstname </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.FirstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastname">
+        <th mat-header-cell *matHeaderCellDef> lastname </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.LastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="devices_owned">
+        <th mat-header-cell *matHeaderCellDef> devices_owned </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.devices_owned}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="last_service_request">
+        <th mat-header-cell *matHeaderCellDef> last_service_request </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.last_service_request}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef> select </th>
+        <td mat-cell *matCellDef="let customer">
+            <button (click)="run('select * from tblDevices a where a.CustomerID = ' + customer.CustomerID, 1)" matFab
+                aria-label="Example icon button with a delete icon">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 3" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="TechnicianID">
+        <th mat-header-cell *matHeaderCellDef> TechnicianID </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.TechnicianID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="FirstName">
+        <th mat-header-cell *matHeaderCellDef> FirstName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.FirstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="LastName">
+        <th mat-header-cell *matHeaderCellDef> LastName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.LastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="number_of_successful_repairs">
+        <th mat-header-cell *matHeaderCellDef> number_of_successful_repairs </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.number_of_successful_repairs}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="seniority_in_years">
+        <th mat-header-cell *matHeaderCellDef> seniority_in_years </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.seniority_in_years}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="worker_type">
+        <th mat-header-cell *matHeaderCellDef> worker_type </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.worker_type}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 4" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="CustomerID">
+        <th mat-header-cell *matHeaderCellDef> CustomerID </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.CustomerID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="FirstName">
+        <th mat-header-cell *matHeaderCellDef> FirstName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.FirstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="LastName">
+        <th mat-header-cell *matHeaderCellDef> LastName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.LastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total_cost">
+        <th mat-header-cell *matHeaderCellDef> total_cost </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.total_cost}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total_item_cost">
+        <th mat-header-cell *matHeaderCellDef> total_item_cost </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.total_item_cost}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total_logistic_and_repair_cost">
+        <th mat-header-cell *matHeaderCellDef> total_logistic_and_repair_cost </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.total_logistic_and_repair_cost}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 5" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="ItemID">
+        <th mat-header-cell *matHeaderCellDef> ItemID </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.ItemID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.Description}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="UnitPrice">
+        <th mat-header-cell *matHeaderCellDef> UnitPrice </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.UnitPrice}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total_amount_consumed">
+        <th mat-header-cell *matHeaderCellDef> total_amount_consumed </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.total_amount_consumed}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="latest_consumed">
+        <th mat-header-cell *matHeaderCellDef> latest_consumed </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.latest_consumed}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 6" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="CustomerID">
+        <th mat-header-cell *matHeaderCellDef> CustomerID </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.CustomerID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="RequestID">
+        <th mat-header-cell *matHeaderCellDef> RequestID </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.RequestID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="FirstName">
+        <th mat-header-cell *matHeaderCellDef> FirstName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.FirstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="LastName">
+        <th mat-header-cell *matHeaderCellDef> LastName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.LastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="DateOfRequest">
+        <th mat-header-cell *matHeaderCellDef> DateOfRequest </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.DateOfRequest}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 7" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="CustomerID">
+        <th mat-header-cell *matHeaderCellDef> CustomerID </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.CustomerID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="FirstName">
+        <th mat-header-cell *matHeaderCellDef> FirstName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.FirstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="LastName">
+        <th mat-header-cell *matHeaderCellDef> LastName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.LastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="devices_owned">
+        <th mat-header-cell *matHeaderCellDef> devices_owned </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.devices_owned}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="last_service_request">
+        <th mat-header-cell *matHeaderCellDef> last_service_request </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.last_service_request}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 8" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="TechnicianID">
+        <th mat-header-cell *matHeaderCellDef> TechnicianID </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.TechnicianID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="number_of_devices_fixed_of_technicians_that_recieved_expertise_in_the_last_year">
+        <th mat-header-cell *matHeaderCellDef> Amount Of Devices Fixed Since Getting Expertise In The Last Year </th>
+        <td mat-cell *matCellDef="let technician">
+            {{technician.number_of_devices_fixed_of_technicians_that_recieved_expertise_in_the_last_year}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<table mat-table [dataSource]="results" *ngIf="type == 9" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="TechnicianID">
+        <th mat-header-cell *matHeaderCellDef> TechnicianID </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.TechnicianID}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="FirstName">
+        <th mat-header-cell *matHeaderCellDef> FirstName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.FirstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="LastName">
+        <th mat-header-cell *matHeaderCellDef> LastName </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.LastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="number_of_devices_fixed">
+        <th mat-header-cell *matHeaderCellDef> number_of_devices_fixed </th>
+        <td mat-cell *matCellDef="let technician"> {{technician.number_of_devices_fixed}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
